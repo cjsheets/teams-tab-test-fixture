@@ -1,18 +1,20 @@
 {
   "name": "teams-tab-test-fixture",
   "version": "0.0.1",
-  "description": "",
+  "description": "Simulate Teams SDK responses for validation and automation",
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --mode development",
-    "build": "webpack"
+    "build": "webpack --mode production",
+    "build:dist": "webpack --mode production --env dist"
   },
   "keywords": [],
   "author": "Chad Sheets",
+  "license": "MIT",
   "dependencies": {
+    "@microsoft/teams-js": "^1.9.0",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "teams-authenticator": "^0.0.2"
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.35",
@@ -20,20 +22,67 @@
     "@types/react-dom": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
+    "copy-webpack-plugin": "^8.1.0",
     "dotenv-webpack": "^7.0.2",
     "eslint": "^7.2.0",
-    "eslint-config-airbnb": "18.2.1",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.1.7",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^1.7.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
     "html-webpack-plugin": "^5.3.0",
+    "teams-authenticator": "^0.0.2",
     "ts-loader": "^8.0.17",
     "typescript": "^4.2.3",
     "webpack": "^5.24.3",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+    },
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "prettier",
+      "plugin:prettier/recommended"
+    ],
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {},
+        {
+          "usePrettierrc": true
+        }
+      ],
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/ban-ts-ignore": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "prefer-promise-reject-errors": "off",
+      "class-methods-use-this": "off",
+      "no-unused-vars": "off"
+    },
+    "ignorePatterns": [
+      "server.js",
+      "webpack.config.js"
+    ]
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 140,
+    "tabWidth": 2,
+    "useTabs": false
   }
 }

@@ -1,4 +1,5 @@
 node_modules/
+dist/
 lib/
-src/auth-shim
+src/authentication.ts
 .env
