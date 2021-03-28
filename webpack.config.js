@@ -16,7 +16,7 @@ module.exports = ({ dist }) => {
   } catch (err) {
     // Auth shim can also be provided at runtime
   }
-  console.log(`Building: ${entry}`);
+  console.log(`Building: ${JSON.stringify(entry)}`);
 
   return {
     entry,
