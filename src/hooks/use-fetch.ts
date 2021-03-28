@@ -24,7 +24,7 @@ export async function makeRequest<T>({ url, init, useCache }: RequestProps<T>) {
   const urlString = JSON.stringify(url);
 
   try {
-    let cachedResponse = useCache ? sessionStorage.getItem(urlString) : null;
+    const cachedResponse = useCache ? sessionStorage.getItem(urlString) : null;
     if (cachedResponse) return JSON.parse(cachedResponse);
 
     const response = await fetch(url, init);

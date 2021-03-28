@@ -20,7 +20,7 @@ export function useAppContext(contextOverrides: PartialTeamsContext, urlTemplate
     const _cachedContext = sessionStorage.getItem('initialContext');
     const cachedContext = (_cachedContext && JSON.parse(_cachedContext)) || {};
 
-    let searchParamsContext: any = {};
+    const searchParamsContext: any = {};
     const { searchParams } = new URL(window.location.href);
     Object.keys(DEFAULT_TEAM_CONTEXT).forEach((key) => {
       if (searchParams.get(key)) searchParamsContext[key] = searchParams.get(key);

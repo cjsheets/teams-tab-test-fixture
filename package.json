@@ -8,8 +8,9 @@
     "build": "webpack --mode production",
     "build:dist": "webpack --mode production --env dist",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.ts\"",
+    "lint": "eslint src/**",
     "prepare": "yarn build",
-    "preversion": "eslint src/**",
+    "preversion": "yarn lint",
     "version": "yarn format && git add -A src",
     "postversion": "git push && git push --tags"
   },
@@ -45,11 +46,11 @@
     "lib/**/*"
   ],
   "bugs": {
-    "url": "https://github.com/cjsheets/teams-authenticator/issues"
+    "url": "https://github.com/cjsheets/teams-tab-test-fixture/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cjsheets/teams-authenticator.git"
+    "url": "git+https://github.com/cjsheets/teams-tab-test-fixture.git"
   },
   "eslintConfig": {
     "root": true,

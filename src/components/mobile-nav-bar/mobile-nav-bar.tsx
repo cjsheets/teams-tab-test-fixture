@@ -26,7 +26,11 @@ export function MobileNavBar({ isNestedLevel, backClick }: MobileNavBar) {
   const title = mobileViewConfig?.title;
   const menu =
     mobileNavBarMenu &&
-    (mobileNavBarMenu.icon ? <img style={iconStyles} src={`data:image/svg+xml;base64, ${mobileNavBarMenu.icon}`} /> : mobileNavBarMenu.title);
+    (mobileNavBarMenu.icon ? (
+      <img style={iconStyles} src={`data:image/svg+xml;base64, ${mobileNavBarMenu.icon}`} />
+    ) : (
+      mobileNavBarMenu.title
+    ));
 
   if (!title && !menu && !isNestedLevel) return null;
 
