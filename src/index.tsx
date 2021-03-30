@@ -60,6 +60,7 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
     </>
   );
 }
+
 ReactDOM.render(
   <TeamsTestFixture
     contextOverrides={{

@@ -2,7 +2,7 @@
   "name": "teams-tab-test-fixture",
   "version": "0.0.2",
   "description": "Simulate Teams SDK responses for validation and automation",
-  "main": "lib/index.js",
+  "main": "lib/server.js",
   "scripts": {
     "dev": "webpack serve --mode development",
     "build": "webpack --mode production",

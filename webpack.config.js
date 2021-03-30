@@ -8,6 +8,7 @@ const path = require('path');
 module.exports = ({ dist }) => {
   const entry = {
     index: path.join(__dirname, 'src/index.tsx'),
+    ['app-context']: path.join(__dirname, 'src/app-context.js'),
   };
 
   try {

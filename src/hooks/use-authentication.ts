@@ -34,7 +34,8 @@ class AuthShim implements AuthProvider {
     if (process.env.NODE_ENV === 'development') {
       return import('../authentication');
     } else {
-      return import(/* webpackIgnore: true */ process.env.AUTHENTICATION_PATH || '/authentication.js');
+      // @ts-ignore
+      return import(/* webpackIgnore: true */ '/authentication.js');
     }
   }
 }
