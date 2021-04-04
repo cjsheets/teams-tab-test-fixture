@@ -84,12 +84,6 @@ export function useFrameListeners(iframe: React.RefObject<HTMLIFrameElement>): [
   ];
 }
 
-export const ENDPOINT = {
-  teams: 'https://graph.microsoft.com/beta/teams/',
-  joinedTeams: 'https://graph.microsoft.com/beta/me/joinedTeams',
-  meOwnedGroups: `https://graph.microsoft.com/beta/me/ownedObjects/microsoft.graph.group`,
-};
-
 export interface TaskCompletion {
   id?: string;
   error?: string;

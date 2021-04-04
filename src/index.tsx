@@ -1,19 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import microsoftTeams from '@microsoft/teams-js';
-import { useAppContext } from './hooks/use-app-context';
+import { useSessionContext } from './hooks/use-session-context';
 import { EmbeddedPageContainer } from './embedded-page-container';
 import { LoadingSpinner } from './components/loading-spinner/loading-spinner';
 
 interface TeamsTestFixture {
-  contextOverrides?: Partial<microsoftTeams.Context>;
-  emulateMobileDevice?: boolean;
-  urlTemplate?: string;
-  iframeProps: React.IframeHTMLAttributes<HTMLIFrameElement>;
+  iframeProps?: React.IframeHTMLAttributes<HTMLIFrameElement>;
 }
 
 export function TeamsTestFixture(props: TeamsTestFixture) {
-  const [appContext, iframeSrc] = useAppContext(props.contextOverrides, props.urlTemplate);
+  const [sessionContext, iframeSrc] = useSessionContext();
   const [levels, setLevels] = useState<microsoftTeams.TaskInfo[]>([]);
   const [completionResult, setCompletion] = useState<string>(null);
 
@@ -47,7 +44,7 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
         <div style={{ ...pageStyle }}>
           <EmbeddedPageContainer
             key={taskInfo.url}
-            emulateMobileDevice={props.emulateMobileDevice}
+            emulateMobileDevice={sessionContext.emulateMobileDevice}
             iframeSrc={taskInfo.url}
             iframeProps={props.iframeProps}
             isNestedLevel={i !== 0}
@@ -61,16 +58,4 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
   );
 }
 
-ReactDOM.render(
-  <TeamsTestFixture
-    contextOverrides={{
-      groupId: 'xxxxxxxx-yyyy-zzzz-xxxx-yyyyyyyyyyyy',
-    }}
-    emulateMobileDevice
-    urlTemplate={'https://localhost:8080?tenantId={tid}&groupId={groupId}'}
-    iframeProps={{
-      style: { width: '100%', height: '100%', border: '0' },
-    }}
-  />,
-  document.getElementById('root')
-);
+ReactDOM.render(<TeamsTestFixture />, document.getElementById('root'));

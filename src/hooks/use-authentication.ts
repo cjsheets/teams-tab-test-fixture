@@ -35,7 +35,7 @@ class AuthShim implements AuthProvider {
       return import('../authentication');
     } else {
       // @ts-ignore
-      return import(/* webpackIgnore: true */ '/authentication.js');
+      return import(/* webpackIgnore: true */ '/authentication.js').then(() => window.TeamsTabTestFixture);
     }
   }
 }

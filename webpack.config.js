@@ -1,44 +1,19 @@
 require('dotenv').config();
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
-const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
-module.exports = ({ dist }) => {
-  const entry = {
-    index: path.join(__dirname, 'src/index.tsx'),
-    ['app-context']: path.join(__dirname, 'src/app-context.js'),
-  };
-
-  try {
-    const buildAuthShim = dist && fs.existsSync('src/authentication.ts');
-    if (buildAuthShim) entry.authentication = path.join(__dirname, 'src/authentication.ts');
-  } catch (err) {
-    // Auth shim can also be provided at runtime
-  }
-  console.log(`Building: ${JSON.stringify(entry)}`);
-
-  return {
-    entry,
+module.exports = ({ auth, dist }) => {
+  const webpackConfig = {
+    entry: {
+      index: path.join(__dirname, 'src/index.tsx'),
+    },
     output: {
       filename: '[name].js',
-      path: path.join(__dirname, dist ? 'dist' : 'lib'),
-    },
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          loader: 'ts-loader',
-          exclude: /node_modules/,
-        },
-      ],
-    },
-    resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      path: path.join(__dirname, auth || dist ? 'dist' : 'lib'),
     },
     plugins: [
-      new DotenvPlugin(),
       new CopyWebpackPlugin({
         patterns: [{ from: 'server.js' }],
       }),
@@ -57,11 +32,40 @@ module.exports = ({ dist }) => {
       </head>
       <body style="margin: 0; font-family: 'Segoe UI'">
         <div id="root"></div>
+        <script>
+          /** ## AppContext **/
+          /** ## TeamsContext **/
+        </script>
       </body>
     </html>
   `,
       }),
     ],
+  };
+
+  if (auth) {
+    webpackConfig.entry = {
+      authentication: path.join(__dirname, 'src/authentication.ts'),
+    };
+    webpackConfig.output.library = { type: 'umd', name: 'TeamsTabTestFixture' };
+    webpackConfig.plugins = [];
+  }
+
+  return {
+    ...webpackConfig,
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          loader: 'ts-loader',
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js'],
+    },
+    plugins: [new DotenvPlugin(), ...webpackConfig.plugins],
     devServer: {
       port: 5000,
     },
