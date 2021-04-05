@@ -8,6 +8,7 @@ declare global {
     TestFixtureAppContext: {
       urlTemplate: string;
       emulateMobileDevice: boolean;
+      mockAuthentication: boolean;
     };
     TestFixtureTeamsContext: Partial<microsoftTeams.Context>;
   }
@@ -36,6 +37,11 @@ export function useSessionContext(): [SessionContext, string] {
             ...window.TestFixtureTeamsContext,
           },
         };
+      }
+
+      if (window.TestFixtureAppContext.mockAuthentication) {
+        sessionStorage.setItem('sessionContext', JSON.stringify(context));
+        return setSessionContext(context);
       }
 
       const { groupId } = context.teamsContext;
