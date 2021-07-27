@@ -61,4 +61,11 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
   );
 }
 
-ReactDOM.render(<TeamsTestFixture />, document.getElementById('root'));
+const props = {
+  iframeProps: {
+    style: { width: '100%', height: '100%', border: '0' },
+  },
+  ...window.TestFixtureAppContext,
+};
+
+ReactDOM.render(<TeamsTestFixture {...props} />, document.getElementById('root'));

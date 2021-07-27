@@ -1,5 +1,5 @@
 const fs = require('fs');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const url = require('url');
 var request = require('request');
@@ -10,7 +10,10 @@ let serverContext = {
   // teamsContext: Partial<microsoftTeams.Context>
 };
 
-const server = http.createServer(function (req, res) {
+const { key, cert } = generateKey();
+const options = { key, cert, requestCert: false, rejectUnauthorized: false };
+
+const server = https.createServer(options, function (req, res) {
   const sanitizedPath = path.normalize(url.parse(req.url).pathname);
   let pathname = path.join(__dirname, sanitizedPath);
 
@@ -63,6 +66,34 @@ const server = http.createServer(function (req, res) {
     res.end(fileContent);
   });
 });
+
+function generateKey() {
+  const { pki, md } = require('node-forge');
+
+  const keys = pki.rsa.generateKeyPair(2048);
+  const cert = pki.createCertificate();
+
+  cert.publicKey = keys.publicKey;
+  cert.serialNumber = '12';
+  cert.validity.notBefore = new Date();
+  cert.validity.notAfter = new Date();
+  cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 1);
+
+  const certificateFields = [
+    { name: 'commonName', value: 'mock' },
+    { name: 'countryName', value: 'mock' },
+    { shortName: 'ST', value: 'mock' },
+    { name: 'localityName', value: 'mock' },
+    { name: 'organizationName', value: 'mock' },
+    { shortName: 'OU', value: 'mock' },
+  ];
+
+  cert.setSubject(certificateFields);
+  cert.setIssuer(certificateFields);
+  cert.sign(keys.privateKey, md.sha1.create());
+
+  return { key: pki.privateKeyToPem(keys.privateKey), cert: pki.certificateToPem(cert) };
+}
 
 module.exports = {
   server,
