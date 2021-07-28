@@ -6,11 +6,14 @@ import { EmbeddedPageContainer } from './embedded-page-container';
 import { LoadingSpinner } from './components/loading-spinner/loading-spinner';
 
 interface TeamsTestFixture {
+  contextOverrides?: Partial<microsoftTeams.Context>;
+  emulateMobileDevice?: boolean;
+  urlTemplate?: string;
   iframeProps?: React.IframeHTMLAttributes<HTMLIFrameElement>;
 }
 
 export function TeamsTestFixture(props: TeamsTestFixture) {
-  const [sessionContext, iframeSrc] = useSessionContext();
+  const [sessionContext, iframeSrc] = useSessionContext(props.contextOverrides, props.urlTemplate);
   const [levels, setLevels] = useState<microsoftTeams.TaskInfo[]>([]);
   const [completionResult, setCompletion] = useState<string>(null);
 
@@ -44,7 +47,7 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
         <div style={{ ...pageStyle }}>
           <EmbeddedPageContainer
             key={taskInfo.url}
-            emulateMobileDevice={sessionContext.emulateMobileDevice}
+            emulateMobileDevice={props.emulateMobileDevice}
             iframeSrc={taskInfo.url}
             iframeProps={props.iframeProps}
             isNestedLevel={i !== 0}
@@ -58,4 +61,11 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
   );
 }
 
-ReactDOM.render(<TeamsTestFixture />, document.getElementById('root'));
+const props = {
+  iframeProps: {
+    style: { width: '100%', height: '100%', border: '0' },
+  },
+  ...window.TestFixtureAppContext,
+};
+
+ReactDOM.render(<TeamsTestFixture {...props} />, document.getElementById('root'));
