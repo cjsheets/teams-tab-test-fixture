@@ -46,7 +46,7 @@ export function EmbeddedPageContainer(props: EmbeddedPageContainer) {
         <NotificationBanner emulateMobileDevice={emulateMobileDevice} />
         <MobileNavBar isNestedLevel={isNestedLevel} backClick={handleBackClick} />
         <LoadingSpinner isLoading={!iframeProps?.src} />
-        <iframe {...iframeProps} ref={ref} aria-label="1" />
+        <iframe {...iframeProps} ref={ref} />
         <MobileActionMenu />
       </div>
     </AppState.Provider>
