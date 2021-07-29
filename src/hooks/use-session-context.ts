@@ -57,20 +57,26 @@ export function useSessionContext(contextOverrides: PartialTeamsContext, urlTemp
       // Need to call teams/teamID/channels/channelId if it's worth channelName
       const isOwner = groupId ? ownedGroups.value.some((group: any) => group.id === groupId) : ownedGroups.value.length > 0;
 
-      const _appContext = {
-        ...defaultContext,
-        ...initialContext,
+      const fetchedContext: any = {
         tid: user.tenantId,
         loginHint: user.username,
         upn: user.username,
         userPrincipalName: user.username,
         userObjectId: user.oid,
-        isTeamArchived: team.isArchived,
-        channelId: team.internalId,
-        teamId: team.internalId,
-        teamName: team.displayName,
+        isTeamArchived: team?.isArchived,
+        channelId: team?.internalId,
+        teamId: team?.internalId,
+        teamName: team?.displayName,
         userTeamRole: isOwner ? 0 : 1,
       };
+
+      const _appContext = {
+        ...defaultContext,
+        ...initialContext,
+      };
+      Object.keys(fetchedContext).forEach((key) => {
+        if (fetchedContext[key] != null) _appContext[key] = fetchedContext[key];
+      });
 
       sessionStorage.setItem('sessionContext', JSON.stringify(_appContext));
       setSessionContext(_appContext);

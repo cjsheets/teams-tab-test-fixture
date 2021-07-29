@@ -65,7 +65,13 @@ const props = {
   iframeProps: {
     style: { width: '100%', height: '100%', border: '0' },
   },
+  contextOverrides: { ...window.TestFixtureTeamsContext },
   ...window.TestFixtureAppContext,
 };
-
+if (process.env.URL_TEMPLATE) {
+  props.urlTemplate = process.env.URL_TEMPLATE;
+}
+if (process.env.GROUP_ID) {
+  props.contextOverrides.groupId = process.env.GROUP_ID;
+}
 ReactDOM.render(<TeamsTestFixture {...props} />, document.getElementById('root'));
