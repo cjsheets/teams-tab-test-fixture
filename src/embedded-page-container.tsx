@@ -7,7 +7,6 @@ import { LoadingSpinner } from './components/loading-spinner/loading-spinner';
 
 interface EmbeddedPageContainer {
   emulateMobileDevice?: boolean;
-  iframeSrc: string;
   iframeProps: React.IframeHTMLAttributes<HTMLIFrameElement>;
   isNestedLevel?: boolean;
   completionResult?: string;
@@ -18,7 +17,7 @@ interface EmbeddedPageContainer {
 export const AppState = React.createContext<IAppState>({});
 
 export function EmbeddedPageContainer(props: EmbeddedPageContainer) {
-  const { emulateMobileDevice, iframeSrc, iframeProps, isNestedLevel, ...rest } = props;
+  const { emulateMobileDevice, iframeProps, isNestedLevel, ...rest } = props;
   const ref = useRef<HTMLIFrameElement>();
   const [appState] = useFrameListeners(ref);
 
@@ -46,8 +45,8 @@ export function EmbeddedPageContainer(props: EmbeddedPageContainer) {
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <NotificationBanner emulateMobileDevice={emulateMobileDevice} />
         <MobileNavBar isNestedLevel={isNestedLevel} backClick={handleBackClick} />
-        <LoadingSpinner isLoading={!iframeSrc} />
-        <iframe {...iframeProps} src={iframeSrc} ref={ref} />
+        <LoadingSpinner isLoading={!iframeProps?.src} />
+        <iframe {...iframeProps} ref={ref} />
         <MobileActionMenu />
       </div>
     </AppState.Provider>

@@ -99,7 +99,7 @@ module.exports = {
   server,
   startServer: function (context) {
     serverContext = context;
-    server.listen(5000, '0.0.0.0').once('listening', () => console.log('TestFixture listening on port 5000'));
+    server.listen(8080, '0.0.0.0').once('listening', () => console.log('TestFixture listening on port 8080'));
   },
   stopServer: function () {
     server.close(() => {

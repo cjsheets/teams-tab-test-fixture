@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import microsoftTeams from '@microsoft/teams-js';
 import { useSessionContext } from './hooks/use-session-context';
@@ -48,8 +48,7 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
           <EmbeddedPageContainer
             key={taskInfo.url}
             emulateMobileDevice={props.emulateMobileDevice}
-            iframeSrc={taskInfo.url}
-            iframeProps={props.iframeProps}
+            iframeProps={{ ...props.iframeProps, src: taskInfo.url }}
             isNestedLevel={i !== 0}
             completionResult={levels.length - 1 === i ? completionResult : null}
             pushLevel={pushLevel}
@@ -65,7 +64,15 @@ const props = {
   iframeProps: {
     style: { width: '100%', height: '100%', border: '0' },
   },
+  contextOverrides: { ...window.TestFixtureTeamsContext },
   ...window.TestFixtureAppContext,
 };
+
+if (process.env.URL_TEMPLATE) {
+  props.urlTemplate = process.env.URL_TEMPLATE;
+}
+if (process.env.GROUP_ID) {
+  props.contextOverrides.groupId = process.env.GROUP_ID;
+}
 
 ReactDOM.render(<TeamsTestFixture {...props} />, document.getElementById('root'));
