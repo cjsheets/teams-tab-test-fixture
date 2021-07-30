@@ -57,7 +57,7 @@ export function MobileActionMenu() {
       <div style={containerStyle}>
         <div style={titleStyle}>{mobileActionMenu.title}</div>
         {mobileActionMenu.items.map((item) => (
-          <div key={item.id} style={optionStyle} onClick={() => handlePress([item.id])}>
+          <div key={item.id} style={optionStyle} onClick={() => handlePress([item.id])} data-e2e={`menu-${item.id}`}>
             {item.title}
           </div>
         ))}
