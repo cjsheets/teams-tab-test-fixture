@@ -37,14 +37,14 @@ export function MobileNavBar({ isNestedLevel, backClick }: MobileNavBar) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', padding: '8px 16px', background: '#ffffff' }}>
       {isNestedLevel && (
-        <div style={backButtonStyle} onClick={() => backButtonPress([])}>
+        <div style={backButtonStyle} onClick={() => backButtonPress([])} data-e2e="nav-bar-back">
           &#8249;
         </div>
       )}
       <div>
         <b>{title}</b>
       </div>
-      <div onClick={() => handleClick([mobileNavBarMenu.id])} style={iconContainerStyles}>
+      <div onClick={() => handleClick([mobileNavBarMenu.id])} style={iconContainerStyles} data-e2e={`nav-bar-${mobileNavBarMenu?.id}`}>
         {menu}
       </div>
     </div>
