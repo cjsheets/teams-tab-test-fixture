@@ -32,7 +32,7 @@ class AuthShim implements AuthProvider {
 
   private async loadAuthenticationProvider() {
     if (process.env.NODE_ENV === 'development') {
-      return import('../authentication');
+      return import('../authentication' as any);
     } else {
       // @ts-ignore
       return import(/* webpackIgnore: true */ '/authentication.js').then(() => window.TeamsTabTestFixture);
