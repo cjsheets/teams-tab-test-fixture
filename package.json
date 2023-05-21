@@ -1,6 +1,6 @@
 {
   "name": "teams-tab-test-fixture",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Simulate Teams SDK responses for validation and automation",
   "main": "lib/server.js",
   "scripts": {
