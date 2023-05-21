@@ -3,17 +3,19 @@ import { AppState } from '../../embedded-page-container';
 import { usePostMessage } from '../../hooks/use-post-message';
 
 interface MobileNavBar {
-  backClick: Function;
   isNestedLevel?: boolean;
 }
 
-export function MobileNavBar({ isNestedLevel, backClick }: MobileNavBar) {
+export function MobileNavBar({ isNestedLevel }: MobileNavBar) {
   const backButtonStyle: React.CSSProperties = {
     height: '100%',
     paddingRight: 16,
-    fontSize: '2rem',
+    fontSize: '1.5rem',
     fontWeight: 'lighter',
+    fontFamily: 'monospace',
     lineHeight: '0.75rem',
+    border: 0,
+    background: 'transparent',
   };
 
   const { mobileNavBarMenu, mobileViewConfig, iframe } = useContext(AppState);
@@ -37,9 +39,9 @@ export function MobileNavBar({ isNestedLevel, backClick }: MobileNavBar) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', padding: '8px 16px', background: '#ffffff' }}>
       {isNestedLevel && (
-        <div style={backButtonStyle} onClick={() => backButtonPress([])} data-e2e="nav-bar-back">
-          &#8249;
-        </div>
+        <button style={backButtonStyle} onClick={() => backButtonPress([])}>
+          {'<'}
+        </button>
       )}
       <div>
         <b>{title}</b>

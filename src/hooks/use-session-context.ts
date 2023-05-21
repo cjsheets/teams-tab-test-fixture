@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuthentication } from './use-authentication';
+import { AuthProvider, useAuthentication } from './use-authentication';
 import { makeRequest } from './use-fetch';
 import { Endpoints } from './constants';
 import { FrameContexts, HostClientType } from '@microsoft/teams-js';
@@ -13,6 +13,7 @@ declare global {
       mockAuthentication: boolean;
     };
     TestFixtureTeamsContext: Partial<microsoftTeams.Context>;
+    AuthenticationProvider: AuthProvider;
   }
 }
 

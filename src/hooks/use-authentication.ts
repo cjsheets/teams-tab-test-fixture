@@ -31,8 +31,13 @@ class AuthShim implements AuthProvider {
   }
 
   private async loadAuthenticationProvider() {
+    // Give testing framework time to inject auth provider
+    await new Promise((r) => setTimeout(r, 1000));
+
     if (process.env.NODE_ENV === 'development') {
-      return import('../authentication');
+      return import('../authentication' as any);
+    } else if (window.AuthenticationProvider) {
+      return Promise.resolve({ default: window.AuthenticationProvider });
     } else {
       // @ts-ignore
       return import(/* webpackIgnore: true */ '/authentication.js').then(() => window.TeamsTabTestFixture);
