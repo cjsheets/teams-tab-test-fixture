@@ -4,6 +4,7 @@ const path = require('path');
 const url = require('url');
 var request = require('request');
 
+// Set when startServer is called or here for development
 let serverContext = {
   // authScriptUrl or authScriptPath: '',
   // appContext: (see: ./src/hooks/use-session-context.ts),
@@ -33,6 +34,13 @@ const server = https.createServer(options, function (req, res) {
         res.end();
       });
       return;
+    } else {
+      // Serve authentication script from local filesystem
+      const filePath = path.join(process.cwd(), 'authentication.js')
+      const file = fs.readFileSync(filePath)
+      res.writeHead(200, { 'Content-Type': 'text/javascript' });
+      res.write(file);
+      res.end();
     }
   }
 
