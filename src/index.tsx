@@ -4,6 +4,7 @@ import microsoftTeams from '@microsoft/teams-js';
 import { useSessionContext } from './hooks/use-session-context';
 import { EmbeddedPageContainer } from './embedded-page-container';
 import { LoadingSpinner } from './components/loading-spinner/loading-spinner';
+import { ActiveTask } from './hooks/use-frame-listeners';
 
 interface TeamsTestFixture {
   contextOverrides?: Partial<microsoftTeams.Context>;
@@ -14,22 +15,20 @@ interface TeamsTestFixture {
 
 export function TeamsTestFixture(props: TeamsTestFixture) {
   const [sessionContext, iframeSrc] = useSessionContext(props.contextOverrides, props.urlTemplate);
-  const [levels, setLevels] = useState<microsoftTeams.TaskInfo[]>([]);
-  const [completionResult, setCompletion] = useState<string>(null);
+  const [activeTasks, setActiveTasks] = useState<ActiveTask[]>([]);
 
   useEffect(() => {
     if (!iframeSrc) return;
-    setLevels([{ url: iframeSrc }]);
+    setActiveTasks([{ taskInfo: { url: iframeSrc }, messageId: null }]);
   }, [iframeSrc]);
 
-  const pushLevel = (taskInfo: microsoftTeams.TaskInfo) => {
-    setLevels([...levels, taskInfo]);
+  const pushTask = (task: ActiveTask) => {
+    setActiveTasks([...activeTasks, task]);
   };
 
-  const popLevel = (result: string) => {
-    levels.pop();
-    setCompletion(result);
-    setLevels([...levels]);
+  const popTask = (result: string) => {
+    activeTasks.pop();
+    setActiveTasks([...activeTasks]);
   };
 
   const pageStyle: React.CSSProperties = {
@@ -42,17 +41,16 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
 
   return (
     <>
-      <LoadingSpinner isLoading={levels.length === 0} />
-      {levels.map((taskInfo, i) => (
+      <LoadingSpinner isLoading={activeTasks.length === 0} />
+      {activeTasks.map((task) => (
         <div style={{ ...pageStyle }}>
           <EmbeddedPageContainer
-            key={taskInfo.url}
+            key={task.taskInfo.url}
             emulateMobileDevice={props.emulateMobileDevice}
-            iframeProps={{ ...props.iframeProps, src: taskInfo.url }}
-            isNestedLevel={i !== 0}
-            completionResult={levels.length - 1 === i ? completionResult : null}
-            pushLevel={pushLevel}
-            popLevel={popLevel}
+            iframeProps={{ ...props.iframeProps, src: task.taskInfo.url }}
+            task={task}
+            pushTask={pushTask}
+            popTask={popTask}
           />
         </div>
       ))}

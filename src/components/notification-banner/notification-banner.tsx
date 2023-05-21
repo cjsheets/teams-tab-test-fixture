@@ -3,7 +3,7 @@ import React from 'react';
 export function NotificationBanner({ emulateMobileDevice }: { emulateMobileDevice: boolean }) {
   let message = null;
 
-  if (!process.env.CLIENT_ID) message = 'CLIENT_ID is required for authentication';
+  if (!process.env.CLIENT_ID && process.env.NODE_ENV === 'development') message = 'CLIENT_ID is required for authentication';
 
   const isIos = /(iPad|iPhone|iPod)(?=.*like Mac OS X)/i.test(window.navigator.userAgent);
   const isAndroid = /android/i.test(window.navigator.userAgent);

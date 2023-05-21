@@ -12,17 +12,25 @@ export interface IAppState {
   iframe?: React.RefObject<HTMLIFrameElement>;
 }
 
-export function useFrameListeners(iframe: React.RefObject<HTMLIFrameElement>): [IAppState] {
+export type ActiveTask = {
+  taskInfo: microsoftTeams.TaskInfo;
+  messageId: string;
+};
+
+export function useFrameListeners(
+  iframe: React.RefObject<HTMLIFrameElement>,
+  task: ActiveTask,
+  pushTask: Function,
+  popTask: Function
+): [IAppState] {
   const [authShim] = useAuthentication();
   const handlers: { [fn: string]: Function } = {};
 
   const [mobileViewConfig, setMobileViewConfig] = useState<microsoftTeams.menus.ViewConfiguration>();
   const [mobileNavBarMenu, setMobileNavBarMenu] = useState<microsoftTeams.menus.MenuItem>();
   const [mobileActionMenu, setMobileActionMenu] = useState<microsoftTeams.menus.ActionMenuParameters>();
-  const [taskInfo, setTaskInfo] = useState<microsoftTeams.TaskInfo>();
-  const [completeTask, setCompleteTask] = useState<TaskCompletion>();
 
-  handlers.initialize = (version: string) => ['content', 'web', version];
+  handlers.initialize = (version: string) => ['content', 'web'];
 
   handlers.getContext = async () => [JSON.parse(sessionStorage.getItem('appContext'))];
 
@@ -46,22 +54,24 @@ export function useFrameListeners(iframe: React.RefObject<HTMLIFrameElement>): [
   };
 
   handlers.tasks_startTask = function (taskInfo: microsoftTeams.TaskInfo, messageId: string) {
-    setCompleteTask({ id: messageId });
-    setTaskInfo(taskInfo);
+    pushTask({ taskInfo, messageId });
   };
 
   handlers.tasks_completeTask = function (result: string) {
-    setCompleteTask({ result });
+    popTask(result);
+    iframe.current.contentWindow.postMessage({ id: task.messageId, args: [null, result] }, '*');
   };
 
   const handleMessage = useCallback(async ({ data, origin, source }: MessageEvent<any>) => {
     if (data.id != null && data.func && source === iframe.current.contentWindow) {
       const fn = data.func.replace('.', '_');
 
-      //console.log('Teams got', fn, data.args);
       if (handlers[fn]) {
         const args = await handlers[fn](data.args?.[0], data.id);
-        iframe.current.contentWindow.postMessage({ id: data.id, args, origin }, '*');
+        if (args) {
+          const message = { id: data.id, args, origin };
+          iframe.current.contentWindow.postMessage(message, origin);
+        }
       }
     }
   }, []);
@@ -77,8 +87,6 @@ export function useFrameListeners(iframe: React.RefObject<HTMLIFrameElement>): [
       mobileNavBarMenu,
       mobileActionMenu,
       setMobileActionMenu,
-      taskInfo,
-      completeTask,
       iframe,
     },
   ];
