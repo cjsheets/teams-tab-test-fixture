@@ -42,13 +42,14 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
   return (
     <>
       <LoadingSpinner isLoading={activeTasks.length === 0} />
-      {activeTasks.map((task) => (
+      {activeTasks.map((task, i) => (
         <div style={{ ...pageStyle }}>
           <EmbeddedPageContainer
             key={task.taskInfo.url}
             emulateMobileDevice={props.emulateMobileDevice}
             iframeProps={{ ...props.iframeProps, src: task.taskInfo.url }}
             task={task}
+            isVisible={activeTasks.length === i + 1}
             pushTask={pushTask}
             popTask={popTask}
           />

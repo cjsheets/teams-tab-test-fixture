@@ -9,6 +9,7 @@ interface EmbeddedPageContainer {
   emulateMobileDevice?: boolean;
   iframeProps: React.IframeHTMLAttributes<HTMLIFrameElement>;
   task: ActiveTask;
+  isVisible: boolean;
   pushTask(task: ActiveTask): void;
   popTask(result: string): void;
 }
@@ -20,13 +21,19 @@ export function EmbeddedPageContainer(props: EmbeddedPageContainer) {
   const ref = useRef<HTMLIFrameElement>();
   const [appState] = useFrameListeners(ref, task, rest.pushTask, rest.popTask);
 
+  const iframeStyle: React.CSSProperties = {
+    flex: '1 1 auto',
+    border: 0,
+    visibility: props.isVisible ? 'visible' : 'hidden',
+  };
+
   return (
     <AppState.Provider value={appState}>
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <NotificationBanner emulateMobileDevice={emulateMobileDevice} />
         <MobileNavBar isNestedLevel={!!task.messageId} />
         <LoadingSpinner isLoading={!iframeProps?.src} />
-        <iframe {...iframeProps} ref={ref} data-e2e={`frame-${task.messageId}`} />
+        <iframe {...iframeProps} ref={ref} style={iframeStyle} data-e2e={`frame-${task.messageId}`} />
         <MobileActionMenu />
       </div>
     </AppState.Provider>
