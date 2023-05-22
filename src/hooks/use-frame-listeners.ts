@@ -32,7 +32,7 @@ export function useFrameListeners(
 
   handlers.initialize = (version: string) => ['content', 'web'];
 
-  handlers.getContext = async () => [JSON.parse(sessionStorage.getItem('appContext'))];
+  handlers.getContext = async () => [JSON.parse(sessionStorage.getItem('sessionContext'))];
 
   handlers.authentication_getAuthToken = async (resource: string[]) => {
     const token = await authShim.getAccessToken(resource);
