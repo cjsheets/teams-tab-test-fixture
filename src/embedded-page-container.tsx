@@ -18,8 +18,8 @@ export const AppState = React.createContext<IAppState>({});
 
 export function EmbeddedPageContainer(props: EmbeddedPageContainer) {
   const { emulateMobileDevice, iframeProps, task, ...rest } = props;
-  const ref = useRef<HTMLIFrameElement>();
-  const [appState] = useFrameListeners(ref, task, rest.pushTask, rest.popTask);
+  task.iframe = useRef<HTMLIFrameElement>();
+  const [appState] = useFrameListeners(task, rest.pushTask, rest.popTask);
 
   const iframeStyle: React.CSSProperties = {
     flex: '1 1 auto',
@@ -31,9 +31,9 @@ export function EmbeddedPageContainer(props: EmbeddedPageContainer) {
     <AppState.Provider value={appState}>
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <NotificationBanner emulateMobileDevice={emulateMobileDevice} />
-        <MobileNavBar isNestedLevel={!!task.messageId} />
+        <MobileNavBar isNestedLevel={!!task.messageId} iframeRef={task.iframe} />
         <LoadingSpinner isLoading={!iframeProps?.src} />
-        <iframe {...iframeProps} ref={ref} style={iframeStyle} data-e2e={`frame-${task.messageId}`} />
+        <iframe {...iframeProps} ref={task.iframe} style={iframeStyle} data-e2e={`frame-${task.messageId}`} />
         <MobileActionMenu />
       </div>
     </AppState.Provider>

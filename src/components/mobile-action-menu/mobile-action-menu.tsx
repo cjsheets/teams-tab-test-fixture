@@ -3,8 +3,8 @@ import { AppState } from '../../embedded-page-container';
 import { usePostMessage } from '../../hooks/use-post-message';
 
 export function MobileActionMenu() {
-  const { mobileActionMenu, setMobileActionMenu, iframe } = useContext(AppState);
-  const [handleItemPress] = usePostMessage(iframe, 'actionMenuItemPress');
+  const { mobileActionMenu, setMobileActionMenu, task } = useContext(AppState);
+  const [handleItemPress] = usePostMessage(task.iframe, 'actionMenuItemPress');
 
   const containerStyle: React.CSSProperties = {
     position: 'fixed',

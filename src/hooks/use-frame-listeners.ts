@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuthentication } from './use-authentication';
 import microsoftTeams from '@microsoft/teams-js';
 
@@ -7,22 +7,19 @@ export interface IAppState {
   mobileNavBarMenu?: microsoftTeams.menus.MenuItem;
   mobileActionMenu?: microsoftTeams.menus.ActionMenuParameters;
   setMobileActionMenu?: Function;
-  taskInfo?: microsoftTeams.TaskInfo;
+  task?: ActiveTask;
   completeTask?: TaskCompletion;
-  iframe?: React.RefObject<HTMLIFrameElement>;
 }
 
 export type ActiveTask = {
+  iframe?: React.RefObject<HTMLIFrameElement>;
+  // taskInfo provided when task was opened
   taskInfo: microsoftTeams.TaskInfo;
+  // Id of the message that opened this task
   messageId: string;
 };
 
-export function useFrameListeners(
-  iframe: React.RefObject<HTMLIFrameElement>,
-  task: ActiveTask,
-  pushTask: Function,
-  popTask: Function
-): [IAppState] {
+export function useFrameListeners(task: ActiveTask, pushTask: Function, popTask: Function): [IAppState] {
   const [authShim] = useAuthentication();
   const handlers: { [fn: string]: Function } = {};
 
@@ -59,18 +56,17 @@ export function useFrameListeners(
 
   handlers.tasks_completeTask = function (result: string) {
     popTask(result);
-    iframe.current.contentWindow.postMessage({ id: task.messageId, args: [null, result] }, '*');
   };
 
   const handleMessage = useCallback(async ({ data, origin, source }: MessageEvent<any>) => {
-    if (data.id != null && data.func && source === iframe.current.contentWindow) {
+    if (data.id != null && data.func && task.iframe.current && source === task.iframe.current.contentWindow) {
       const fn = data.func.replace('.', '_');
 
       if (handlers[fn]) {
         const args = await handlers[fn](data.args?.[0], data.id);
         if (args) {
           const message = { id: data.id, args, origin };
-          iframe.current.contentWindow.postMessage(message, origin);
+          task.iframe.current.contentWindow.postMessage(message, origin);
         }
       }
     }
@@ -87,7 +83,7 @@ export function useFrameListeners(
       mobileNavBarMenu,
       mobileActionMenu,
       setMobileActionMenu,
-      iframe,
+      task,
     },
   ];
 }
