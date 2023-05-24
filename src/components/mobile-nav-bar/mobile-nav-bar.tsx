@@ -4,9 +4,10 @@ import { usePostMessage } from '../../hooks/use-post-message';
 
 interface MobileNavBar {
   isNestedLevel?: boolean;
+  iframeRef: React.MutableRefObject<HTMLIFrameElement>;
 }
 
-export function MobileNavBar({ isNestedLevel }: MobileNavBar) {
+export function MobileNavBar({ isNestedLevel, iframeRef }: MobileNavBar) {
   const backButtonStyle: React.CSSProperties = {
     height: '100%',
     paddingRight: 16,
@@ -18,12 +19,12 @@ export function MobileNavBar({ isNestedLevel }: MobileNavBar) {
     background: 'transparent',
   };
 
-  const { mobileNavBarMenu, mobileViewConfig, iframe } = useContext(AppState);
+  const { mobileNavBarMenu, mobileViewConfig } = useContext(AppState);
   const iconContainerStyles: React.CSSProperties = { flex: '1 1 auto', display: 'flex', justifyContent: 'flex-end' };
   const iconStyles: React.CSSProperties = { width: 20, height: 20 };
 
-  const [handleClick] = usePostMessage(iframe, 'navBarMenuItemPress');
-  const [backButtonPress] = usePostMessage(iframe, 'backButtonPress');
+  const [handleClick] = usePostMessage(iframeRef, 'navBarMenuItemPress');
+  const [backButtonPress] = usePostMessage(iframeRef, 'backButtonPress');
 
   const title = mobileViewConfig?.title;
   const menu =

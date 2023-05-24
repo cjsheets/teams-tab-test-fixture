@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-export function usePostMessage(iframe: React.RefObject<HTMLIFrameElement>, func: string) {
+export function usePostMessage(iframe: React.MutableRefObject<HTMLIFrameElement>, func: string) {
   return [
     useCallback(
       (args) => {

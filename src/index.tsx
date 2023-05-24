@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import microsoftTeams from '@microsoft/teams-js';
 import { useSessionContext } from './hooks/use-session-context';
@@ -27,7 +27,10 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
   };
 
   const popTask = (result: string) => {
-    activeTasks.pop();
+    const { messageId } = activeTasks.pop();
+    const { iframe } = activeTasks[activeTasks.length - 1];
+    // Notify the opener that the task it opened is closing
+    iframe.current.contentWindow.postMessage({ id: messageId, args: [null, result] }, '*');
     setActiveTasks([...activeTasks]);
   };
 
