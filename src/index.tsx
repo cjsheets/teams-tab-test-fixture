@@ -52,6 +52,7 @@ export function TeamsTestFixture(props: TeamsTestFixture) {
             emulateMobileDevice={props.emulateMobileDevice}
             iframeProps={{ ...props.iframeProps, src: task.taskInfo.url }}
             task={task}
+            isTeamContext={!!sessionContext?.groupId}
             isVisible={activeTasks.length === i + 1}
             pushTask={pushTask}
             popTask={popTask}
