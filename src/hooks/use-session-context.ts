@@ -17,9 +17,7 @@ declare global {
   }
 }
 
-type SessionContext = {
-  teamsContext: Window['TestFixtureTeamsContext'];
-} & Window['TestFixtureAppContext'];
+type SessionContext = Window['TestFixtureTeamsContext'] & Window['TestFixtureAppContext'];
 
 type PartialTeamsContext = Partial<microsoftTeams.Context>;
 
@@ -82,7 +80,7 @@ export function useSessionContext(contextOverrides: PartialTeamsContext, urlTemp
       sessionStorage.setItem('sessionContext', JSON.stringify(_appContext));
       setSessionContext(_appContext);
     })();
-  }, []);
+  }, [contextOverrides]);
 
   let iframeSrc = '';
   if (sessionContext) {
