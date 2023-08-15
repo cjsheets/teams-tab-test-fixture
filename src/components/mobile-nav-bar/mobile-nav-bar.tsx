@@ -20,7 +20,13 @@ export function MobileNavBar({ isNestedLevel, iframeRef }: MobileNavBar) {
   };
 
   const { mobileNavBarMenu, mobileViewConfig } = useContext(AppState);
-  const iconContainerStyles: React.CSSProperties = { flex: '1 1 auto', display: 'flex', justifyContent: 'flex-end' };
+  const iconContainerStyles: React.CSSProperties = {
+    flex: '1 1 auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    border: '0',
+    background: 'transparent',
+  };
   const iconStyles: React.CSSProperties = { width: 20, height: 20 };
 
   const [handleClick] = usePostMessage(iframeRef, 'navBarMenuItemPress');
@@ -47,9 +53,9 @@ export function MobileNavBar({ isNestedLevel, iframeRef }: MobileNavBar) {
       <div>
         <b>{title}</b>
       </div>
-      <div onClick={() => handleClick([mobileNavBarMenu.id])} style={iconContainerStyles} data-e2e={`nav-bar-${mobileNavBarMenu?.id}`}>
+      <button onClick={() => handleClick([mobileNavBarMenu.id])} style={iconContainerStyles} data-e2e={`nav-bar-${mobileNavBarMenu?.id}`}>
         {menu}
-      </div>
+      </button>
     </div>
   );
 }
