@@ -112,7 +112,6 @@ module.exports = {
   stopServer: function () {
     server.close(() => {
       console.log('TestFixture stopped');
-      process.exit(0);
     });
   },
 };
